@@ -41,8 +41,6 @@ yarn-error.log*
 next-env.d.ts
 
 
-git remote add origin https://github.com/gauravskp/my-nextjs-project.git
-git add .
-git commit -m "Initial commit"
-git branch -M main
-git push -u origin main
+
+
+.vercel
