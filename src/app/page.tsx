@@ -7,9 +7,9 @@ import ContactPage from "./contact/page";
 
 export default function Home() {
   return (
-    <main className="min-h-screen flex flex-col items-center justify-center text-center bg-gray-100 dark:bg-gray-900 dark:text-white p-6">
+    <main className="min-h-screen flex flex-col items-center justify-center text-center bg-gray-100 dark:bg-gray-900 dark:text-white p-6 ">
       {/* Hero Section */}
-      <section className="max-w-3xl">
+      <section className="max-w-3xl mt-12">
         <h1 className="text-5xl font-bold text-gray-900 dark:text-white mb-4">
           Welcome to My Website
         </h1>

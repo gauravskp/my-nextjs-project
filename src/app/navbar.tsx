@@ -1,14 +1,35 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { FiMenu, FiX } from "react-icons/fi";
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
+  const [isVisible, setIsVisible] = useState(true);
+  const [lastScrollY, setLastScrollY] = useState(0);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+
+      // If scrolling down, move Navbar up but keep part of it visible
+      setIsVisible(currentScrollY < lastScrollY || currentScrollY < 50);
+
+      setLastScrollY(currentScrollY);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [lastScrollY]);
 
   return (
-    <nav className="bg-white shadow-md fixed top-12 left-0 w-full z-50">
+    <nav
+    className={`bg-white shadow-md fixed top-[2.5rem] left-0 w-full md:mx-5 md:w-[calc(100%-2.5rem)] md:rounded-lg z-50 transition-transform duration-300 ${
+      isVisible ? "translate-y-0" : "-translate-y-8"
+    }`}
+  >
+  
       <div className="container mx-auto flex items-center justify-between p-4">
         {/* Logo */}
         <Link href="/" className="text-2xl font-bold text-gray-900">
@@ -25,7 +46,7 @@ export default function Navbar() {
 
         {/* Navigation Links */}
         <ul
-          className={`absolute md:static top-14 left-0 w-full md:w-auto bg-white md:flex md:space-x-6 items-center shadow-md md:shadow-none transition-all ${
+          className={`absolute md:static top-12 left-0 w-full md:w-auto bg-white md:flex md:space-x-6 items-center shadow-md md:shadow-none transition-all ${
             isOpen ? "block" : "hidden md:flex"
           }`}
         >

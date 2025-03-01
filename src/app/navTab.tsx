@@ -1,30 +1,40 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { FiSun, FiMoon } from "react-icons/fi";
 
 export default function NavTab() {
-  const [darkMode, setDarkMode] = useState(false);
+  const [isVisible, setIsVisible] = useState(true);
+  const [lastScrollY, setLastScrollY] = useState(0);
 
   useEffect(() => {
-    if (darkMode) {
-      document.documentElement.classList.add("dark");
-    } else {
-      document.documentElement.classList.remove("dark");
-    }
-  }, [darkMode]);
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+
+      // Hide when scrolling down, show when scrolling up
+      setIsVisible(currentScrollY < lastScrollY || currentScrollY < 50);
+
+      setLastScrollY(currentScrollY);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [lastScrollY]);
 
   return (
-    <div className="bg-gray-200 dark:bg-gray-800 text-gray-700 dark:text-white py-2 px-4 flex justify-between items-center fixed top-0 left-0 w-full z-50">
-      <div className="text-sm">
-        📧 Email: contact@mywebsite.com | 📞 Phone: +123-456-7890
+    <div
+      className={`bg-gray-200 dark:bg-gray-800 text-gray-700 dark:text-white py-2 px-4 flex justify-between items-center fixed top-0 left-0 w-full z-50 transition-transform duration-300 ${
+        isVisible ? "translate-y-0" : "-translate-y-full"
+      }`} 
+    >
+      <div className="text-sm flex gap-4">
+        {/* Clickable Email & Phone */}
+        <a href="mailto:platecindustries@gmail.com" className="hover:underline">
+          📧 Email: platecindustries@gmail.com
+        </a>
+        <a href="tel:+02228701900" className="hover:underline">
+          📞 Phone: +022 28701900
+        </a>
       </div>
-      <button
-        onClick={() => setDarkMode(!darkMode)}
-        className="flex items-center gap-2 text-sm bg-gray-300 dark:bg-gray-700 p-2 rounded"
-      >
-        {darkMode ? <FiSun /> : <FiMoon />} {darkMode ? "Light Mode" : "Dark Mode"}
-      </button>
     </div>
   );
 }

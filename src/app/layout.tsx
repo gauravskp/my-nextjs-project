@@ -1,12 +1,27 @@
+"use client"; // Mark this as a client component
+
 import "./globals.css";
 import NavTab from "./navTab";
 import Navbar from "./navbar";
 import Footer from "./footer";
-import Head from "next/head";
+import { useEffect, useState } from "react";
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
+  const [theme, setTheme] = useState("light");
+
+  // Auto-detect system theme
+  useEffect(() => {
+    const savedTheme = localStorage.getItem("theme") || "light";
+    setTheme(savedTheme);
+    if (savedTheme === "dark") {
+      document.documentElement.classList.add("dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+    }
+  }, []);
+
   return (
-    <html lang="en">
+    <html lang="en" className={theme}>
       <head>
         {/* Metadata for SEO */}
         <title>Platec Industries</title>
@@ -18,12 +33,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <meta property="og:type" content="website" />
       </head>
 
-      <body className="flex flex-col min-h-screen bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-200">
+      <body className="flex flex-col min-h-screen bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-200 transition-colors duration-300">
         <NavTab />
         <Navbar />
-        <main className="flex-grow mt-32">{/* Added margin-top to avoid overlapping */} 
-          {children}
-        </main>
+        <main className="flex-grow mt-20">{children}</main> {/* Prevent navbar overlap */}
         <Footer />
       </body>
     </html>

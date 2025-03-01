@@ -2,7 +2,18 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Enable dark mode based on class */
+/* Root theme variables */
+:root {
+  --background: #ffffff;
+  --foreground: #1a1a1a;
+}
+
 html.dark {
-  @apply bg-gray-900 text-white;
+  --background: #1a1a1a;
+  --foreground: #f5f5f5;
+}
+
+/* Apply global background & text colors */
+body {
+  @apply bg-[var(--background)] text-[var(--foreground)] transition-colors duration-300;
 }
