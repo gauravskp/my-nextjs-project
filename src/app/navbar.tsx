@@ -2,20 +2,19 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { FiMenu, FiX } from "react-icons/fi";
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
+  const router = useRouter();
 
   useEffect(() => {
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
-
-      // If scrolling down, move Navbar up but keep part of it visible
       setIsVisible(currentScrollY < lastScrollY || currentScrollY < 50);
-
       setLastScrollY(currentScrollY);
     };
 
@@ -23,13 +22,21 @@ export default function Navbar() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, [lastScrollY]);
 
+  // Function to handle mobile navigation
+  const handleNavigation = (path: string, event: React.MouseEvent) => {
+    if (window.innerWidth <= 768) {
+      event.preventDefault(); // Prevent default link behavior on mobile
+      router.push(path); // Use router.push for instant navigation
+      setIsOpen(false); // Close menu
+    }
+  };
+
   return (
     <nav
-    className={`bg-white shadow-md fixed top-[2.5rem] left-0 w-full md:mx-5 md:w-[calc(100%-2.5rem)] md:rounded-lg z-50 transition-transform duration-300 ${
-      isVisible ? "translate-y-0" : "-translate-y-8"
-    }`}
-  >
-  
+      className={`bg-white shadow-md fixed top-[2.5rem] left-0 w-full md:mx-5 md:w-[calc(100%-2.5rem)] md:rounded-lg z-50 transition-transform duration-300 ${
+        isVisible ? "translate-y-0" : "-translate-y-8"
+      }`}
+    >
       <div className="container mx-auto flex items-center justify-between p-4">
         {/* Logo */}
         <Link href="/" className="text-2xl font-bold text-gray-900">
@@ -57,7 +64,12 @@ export default function Navbar() {
             { name: "Contact Us", path: "/contact" },
           ].map((link) => (
             <li key={link.name} className="text-lg p-4 md:p-0 text-gray-700 hover:text-blue-600">
-              <Link href={link.path}>{link.name}</Link>
+              <Link
+                href={link.path}
+                onClick={(event) => handleNavigation(link.path, event)}
+              >
+                {link.name}
+              </Link>
             </li>
           ))}
         </ul>
